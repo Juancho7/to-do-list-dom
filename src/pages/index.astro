@@ -1,5 +1,5 @@
 ---
-
+import '../styles/global.css';
 ---
 
 <html lang='en'>
@@ -8,9 +8,79 @@
     <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
     <meta name='viewport' content='width=device-width' />
     <meta name='generator' content={Astro.generator} />
-    <title>Astro</title>
+    <title>To Do App</title>
   </head>
   <body>
-    <h1>To DO APP</h1>
+    <header>
+      <h1>To do App</h1>
+    </header>
+    <main>
+      <section>
+        <form id='add-task-form'>
+          <input type='text' id='input-task-title' />
+          <input type='submit' value='Add' />
+        </form>
+      </section>
+
+      <section class='section-tasks-view'>
+        <ul id='show-todos' class='ul-tasks'></ul>
+      </section>
+    </main>
   </body>
 </html>
+
+<style>
+  header,
+  main {
+    padding: 10px 3rem;
+  }
+
+  .ul-tasks {
+    padding-top: 20px;
+    padding-left: 20px;
+  }
+</style>
+
+<script>
+  import { todoList } from '../javascript/main.js';
+  const formAddTodos = document.querySelector('#add-task-form');
+  const inputTaskTitle = document.querySelector(
+    '#input-task-title'
+  ) as HTMLInputElement;
+  const ulTodos = document.querySelector('#show-todos');
+
+  const addTodo = (title) => {
+    const newTodo = {
+      id: crypto.randomUUID(),
+      title,
+      isCompleted: false,
+    };
+
+    todoList.push(newTodo);
+  };
+
+  const showTodos = () => {
+    ulTodos.innerHTML = '';
+
+    todoList.forEach((todo) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = todo.title;
+      ulTodos.append(listItem);
+    });
+  };
+
+  window.addEventListener('load', () => {
+    showTodos();
+  });
+
+  formAddTodos.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const title = inputTaskTitle.value;
+
+    addTodo(title);
+    showTodos();
+
+    inputTaskTitle.value = '';
+  });
+</script>
